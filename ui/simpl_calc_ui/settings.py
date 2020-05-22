@@ -48,7 +48,6 @@ INSTALLED_APPS = [
     'cuser',
     'users',
     'frontend',
-    'bootstrap3',
 ]
 
 MIDDLEWARE = [
