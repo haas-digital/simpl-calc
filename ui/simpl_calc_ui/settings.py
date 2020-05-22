@@ -133,6 +133,13 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'staticfiles'),
 ]
 
+WEBPACK_LOADER = {
+    'DEFAULT': {
+        'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats', 'webpack-stats.json')
+    }
+}
+
+
 MODEL_SERVICE_WS = os.environ.get('MODEL_SERVICE_WS', 'ws://localhost:8080/ws')
 
 SIMPL_GAMES_URL = os.environ.get('SIMPL_GAMES_URL',

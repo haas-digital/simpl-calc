@@ -1,38 +1,29 @@
-FROM gladiatr72/just-tini:latest as tini
+FROM node:10-alpine as frontend
+RUN apk add --no-cache git
+USER node
+WORKDIR /home/node
+COPY package.json package-lock.json ./
+RUN npm install
+COPY gulpfile.js .eslintrc.js webpack.config.js gulpfile.js ./
+COPY js ./js
+COPY frontend ./frontend
+RUN npx gulp build
+CMD ["npm", "run", "start"]
 
-FROM revolutionsystems/python:3.6.9-wee-optimized-lto
 
+FROM python:3.6 as backend
 LABEL Description="Image for simpl-calc-ui" Vendor="Wharton" Version="0.1.0"
-
-ENV PYTHONUNBUFFERED 1
-
-RUN mkdir /code
-RUN mkdir /code/staticfiles
-RUN mkdir /code/staticfiles/webpack_bundles
 
 WORKDIR /code
 
-COPY --from=tini /tini /tini
-
-RUN pip install --upgrade pip
-
-ADD ./requirements.txt /code/
+COPY ./requirements.txt ./
 RUN pip install -r /code/requirements.txt
-
-# Setup NodeJS
-RUN set -ex && apt-get update && apt-get -y install curl software-properties-common
-RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
-RUN apt-get -y install nodejs
-
-ADD ./package.json /code/
-RUN npm install
-
-ADD . /code/
-
-#RUN NODE_ENV=production npm run compile
-
+COPY . ./
+COPY --from=frontend /home/node/staticfiles/webpack_bundles ./staticfiles/webpack_bundles
+COPY --from=frontend /home/node/webpack-stats ./
+RUN ./manage.py collectstatic --noinput
 ENV PYTHONPATH /code:$PYTHONPATH
 ENV MODEL_SERVICE_WS ws://localhost:8080/ws
 
 EXPOSE 8000
-CMD /code/bootstrap.sh
+CMD ["./manage.py", "runserver", "0.0.0.0:8000"]

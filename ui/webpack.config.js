@@ -103,7 +103,7 @@ if (process.env.NODE_ENV === 'production') {
         warnings: false,
       },
     }),
-    new BundleTracker({filename: './webpack-stats.json'}),
+    new BundleTracker({filename: './webpack-stats/webpack-stats.json'}),
   ];
 } else {
   config.output.filename = '[name].bundle.js';
@@ -116,7 +116,7 @@ if (process.env.NODE_ENV === 'production') {
       minChunks: 3,
       name: 'common',
     }),
-    new BundleTracker({filename: './webpack-stats.json'}),
+    new BundleTracker({filename: './webpack-stats/webpack-stats.json'}),
   ];
 }
 

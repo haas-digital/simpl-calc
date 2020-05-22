@@ -1,0 +1,61 @@
+version: '3.7'
+
+services:
+  db:
+    image: postgres:12-alpine
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+  api:
+    image: "ipmb/simpl-games-api:953f27657bc86b0a09adaf12c5a3dd2f8a63921e"
+    ports:
+      - "8100:8000"
+    command: ["/bin/bash", "/code/start.sh"]
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@db/postgres
+      - DJANGO_SETTINGS_MODULE=config.settings.local
+      - DJANGO_DEBUG=1
+      - GUNICORN_BIND=0.0.0.0:8000
+      - DEBUG=True
+    depends_on:
+      - db
+    stop_signal: SIGTERM
+  model.backend:
+    build:
+      context: model
+    volumes:
+      - ./model:/code
+    depends_on:
+      - api
+    ports:
+      - "8080:8080"
+    command: ["/code/manage.py", "run_modelservice"]
+    environment:
+      - SIMPL_GAMES_URL=http://api:8000/apis/
+      - CALLBACK_URL=http://model.backend:8080/callback
+  ui.frontend:
+    build:
+      context: ui
+      target: frontend
+    volumes:
+      - ./ui:/home/node:cached
+      - /home/node/node_modules
+      - ./_data/webpack-stats:/home/node/webpack-stats:delegated
+      - ./_data/webpack_bundles:/home/node/staticfiles/webpack_bundles:delegated
+  ui.backend:
+    build:
+      context: ui
+      target: backend
+    volumes:
+      - ./ui:/code:cached
+      - ./_data/webpack-stats:/code/webpack-stats:delegated
+      - ./_data/webpack_bundles:/code/staticfiles/webpack_bundles:delegated
+    ports:
+      - "8000:8000"
+    environment:
+      - MODEL_SERVICE_WS=ws://localhost:8080/ws
+      - SIMPL_GAMES_URL=http://api:8000/apis/
+
+volumes:
+  postgres_data:

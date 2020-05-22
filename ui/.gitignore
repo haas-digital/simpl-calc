@@ -88,8 +88,6 @@ ENV/
 
 node_modules/
 
-webpack-stats.json
-
 # Pycharm
 .idea
 
@@ -98,3 +96,6 @@ webpack-stats.json
 
 # Webpack
 staticfiles/webpack_bundles
+webpack-stats/
+.config/
+.babel.json
