@@ -31,6 +31,7 @@ services:
     ports:
       - "8080:8080"
     command: ["/code/manage.py", "run_modelservice"]
+    restart: on-failure
     environment:
       - SIMPL_GAMES_URL=http://api:8000/apis/
       - CALLBACK_URL=http://model.backend:8080/callback
@@ -43,6 +44,7 @@ services:
       - /home/node/node_modules
       - ./_data/webpack-stats:/home/node/webpack-stats:delegated
       - ./_data/webpack_bundles:/home/node/staticfiles/webpack_bundles:delegated
+    restart: on-failure
   ui.backend:
     build:
       context: ui
@@ -51,6 +53,7 @@ services:
       - ./ui:/code:cached
       - ./_data/webpack-stats:/code/webpack-stats:delegated
       - ./_data/webpack_bundles:/code/staticfiles/webpack_bundles:delegated
+    restart: on-failure
     ports:
       - "8000:8000"
     environment:

@@ -1,0 +1,20 @@
+name: Build
+on: [push]
+jobs:
+  cypress-run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Cypress run
+        uses: cypress-io/github-action@v1
+        with:
+          # Use npm because a relative path to a script fails
+          build: npm run bootstrap-ci
+          start: docker-compose up
+          wait-on: 'http://localhost:8000'
+      - uses: actions/upload-artifact@v2
+        if: ${{ always() }}
+        with:
+          name: screenshots
+          path: cypress/screenshots/**/*.png

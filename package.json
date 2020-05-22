@@ -1,0 +1,23 @@
+{
+  "name": "simpl-calc",
+  "version": "1.0.0",
+  "description": "Cypress tests for simpl-calc",
+  "main": "index.js",
+  "scripts": {
+    "test": "cypress run",
+    "bootstrap-ci": "./bootstrap.sh && sudo chmod -R a+rw ui _data"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ipmb/simpl-calc.git"
+  },
+  "author": "",
+  "license": "GPL",
+  "bugs": {
+    "url": "https://github.com/ipmb/simpl-calc/issues"
+  },
+  "homepage": "https://github.com/ipmb/simpl-calc#readme",
+  "devDependencies": {
+    "cypress": "^4.6.0"
+  }
+}

@@ -1,5 +1,7 @@
 # Simpl Calc
 
+[![Build](https://github.com/ipmb/simpl-calc/workflows/Build/badge.svg)](https://github.com/ipmb/simpl-calc/actions?query=workflow%3ABuild)
+
 This is a sample game built on the [Simpl](https://simpl.world/) simulation platform. It includes code for both the [model service](https://simpl.world/docs/services/modelservice/) (`model`) and user-facing frontend using [simpl-react](https://simpl.world/docs/services/simpl-react/) (`ui`).
 
 While it's possible to setup/install the individual components manually, the recommended way to run Simpl Calc locally is with [Docker Compose](https://docs.docker.com/compose/). If you are developing on MacOS or Windows, you'll need [Docker Desktop](https://docs.docker.com/desktop/) installed. Follow the [instructions here for Linux](https://docs.docker.com/compose/install/).
@@ -40,3 +42,11 @@ You should now be able to visit the simpl-calc UI at `http://localhost:8000` and
   password: `s1`
 * user: `s2@calc.edu`  
   password: `s2`
+
+## Tests
+
+Tests are in the `cypress/integration` directory and can be run via [Cypress](https://www.cypress.io/). They run outside Docker Compose and require a Node.js installation.
+
+To install Cypress, run `npm install`.
+
+Tests can be run headless via `npm test` or in a live browser with `npx cypress open`.
